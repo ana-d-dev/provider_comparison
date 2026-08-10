@@ -1,20 +1,14 @@
-<footer class="py-3 text-center">
-    <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-        <li class="nav-item">
-            <a href="{{ url_for('home') }}" class="nav-link px-2 text">Home</a>
-        </li>
+<footer class="app-footer">
 
-        <li class="nav-item">
-            <a href="{{ url_for('about') }}" class="nav-link px-2 text">About</a>
-        </li>
+    <div class="footer-links">
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('contact') }}">Contact</a>
+        <a href="{{ url_for('privacy') }}">Privacy</a>
+        <a href="{{ url_for('api') }}">API</a>
+    </div>
 
-        <li class="nav-item">
-            <a href="{{ url_for('contact') }}" class="nav-link px-2 text">Contact</a>
-        </li>
+    <div class="footer-copy">
+        © 2026 Tariff Comparison • Croatian Mobile Plans
+    </div>
 
-        <li class="nav-item">
-            <a href="{{ url_for('privacy') }}" class="nav-link px-2 text">Privacy</a>
-        </li>
-    </ul>
-    <p class="mb-0">© 2026 All Croatian Mobile Providers</p>
 </footer>

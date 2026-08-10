@@ -1,6 +1,6 @@
 from playwright.sync_api import sync_playwright, Error as PlaywrightError, Browser, Page, ElementHandle
-from price_comparison.logger_config import setup_logger
 from price_comparison.tariff_selectors.a1 import tariffs
+from price_comparison.logger_config import setup_logger
 from price_comparison.config.providers import providers
 from datetime import date
 
@@ -46,7 +46,7 @@ class A1:
         """
         try:
             # Launch browser in non-headless mode (set to True for production automation).
-            self.browser = self.p.chromium.launch(headless=True)
+            self.browser = self.p.chromium.launch(headless=False)
 
             # Opening a new browser tab
             self.page = self.browser.new_page()
@@ -80,27 +80,12 @@ class A1:
         """
         try:
             assert self.page is not None
-            # Collect all tariff-category buttons on the page
-            self.buttons = self.page.query_selector_all(tariffs['a1']['buttons'])
 
-            # Click each button to reveal and scrape corresponding tariff data
-            for button in self.buttons:
-                button.click()
+            # Extract main tariff fields after button click
+            self.raw_main_names = self.page.locator(tariffs['a1']['main_names']).all_inner_texts()
+            self.raw_main_values = self.page.locator(tariffs['a1']['main_values']).all_inner_texts()
+            self.raw_main_prices = self.page.locator(tariffs['a1']['main_prices']).all_inner_texts()
 
-                # Extract main tariff fields after button click
-                main_names = self.page.locator(tariffs['a1']['main_names']).all_inner_texts()
-                main_values = self.page.locator(tariffs['a1']['main_values']).all_inner_texts()
-                main_prices = self.page.locator(tariffs['a1']['main_prices']).all_inner_texts()
-
-                # Appending data into raw containers
-                for name in main_names:
-                    self.raw_main_names.append(name)
-
-                for value in main_values:
-                    self.raw_main_values.append(value)
-
-                for price in main_prices:
-                    self.raw_main_prices.append(price)
 
             # Extract additional tariffs (names, prices, GB/minutes).
             self.raw_add_names = self.page.locator(tariffs['a1']['add_names']).all_inner_texts()
@@ -173,15 +158,8 @@ class A1:
         Stores results in self.clean_main_prices.
         """
         self.clean_main_prices = [
-            price.replace('\n', '')
-            .replace('mjesečno', '')
-            .replace('€', '')
-            .replace('/mj.', '')
-            .replace('Cijena za tri mjeseca', '')
-            .replace('Cijena za šest mjeseci', '')
-            .replace(',', '.').strip().split(' ')[0] # keep only the numeric portion
+            price.replace(',', '.').replace('€', '').strip()
             for price in self.raw_main_prices
-            if price
         ]
 
 
@@ -193,9 +171,11 @@ class A1:
         Stores results in self.clean_main_values.
         """
         self.clean_main_values = [
-            value.replace('Saznaj više', '').strip()
+            val.strip()
             for value in self.raw_main_values
-            if value.replace('Saznaj više', '').strip()
+            for val in value.replace('min/sms', '').replace('GB', '').split('\n')
+            if val.strip()
+
         ]
 
 

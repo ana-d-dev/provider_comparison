@@ -52,7 +52,7 @@ providers: dict[str, ProviderConfig] = {
     'tomato': {
         'provider': 'TOMATO',
         'urls': {
-            'main': 'https://www.tomato.com.hr/tarife-na-bonove'
+            'main': 'https://www.tomato.com.hr/t-val'
             },
         },
     'bon_bon': {

@@ -1,6 +1,13 @@
-<header class="py-3">
-    <ul class="nav nav-pills justify-content-center flex-wrap">
+<header class="app-header">
 
+    <div class="brand">
+        <a href="{{ url_for('home') }}" class="brand-link">
+            <span class="brand-white">Provider</span>
+            <span class="brand-blue">Comparison</span>
+        </a>
+    </div>
+
+    <ul class="nav header-nav">
         <li class="nav-item">
             <a href="{{ url_for('home') }}"
                class="nav-link {% if active_page == 'home' %}active{% endif %}">
@@ -50,5 +57,27 @@
             </a>
         </li>
 
+        <li class="nav-item">
+            <a href="{{ url_for('api') }}"
+               class="nav-link {% if active_page == 'API' %}active{% endif %}">
+                API
+            </a>
+        </li>
     </ul>
+
+        <div class="header-auth">
+            {% if not logged_in %}
+                <a href="{{ url_for('login') }}" class="auth-btn">Login</a>
+                <a href="{{ url_for('register') }}" class="auth-btn primary">Register</a>
+            {% else %}
+                <a href="{{ url_for('profile') }}" class="auth-btn">Profile</a>
+                <form action="{{ url_for('logout_post') }}" method="POST">
+                    <button type="submit" class="auth-btn primary">
+                        Logout
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+
+
 </header>

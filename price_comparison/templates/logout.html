@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    {% include 'head.html' %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- PAGE CONTENT -->
+    <main class="container py-4 flex-grow-1">
+
+        <!-- NAVIGATION -->
+        {% include 'header.html'%}
+
+        <!-- LOGIN FORM -->
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <h3> You successfully logged out. </h3>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto">
+        <div class="container">
+            {% include 'footer.html' %}
+        </div>
+    </footer>
+
+    <!-- ALL SCRIPTS INCLUDED (BOOTSTRAP AND JAVASCRIPT) -->
+    {% include 'scripts.html' %}
+</body>
+</html>

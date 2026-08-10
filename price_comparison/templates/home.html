@@ -4,37 +4,54 @@
     <title>Compare</title>
     {% include 'head.html' %}
 </head>
-<body>
-    <main class="container py-4">
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- PAGE CONTENT -->
+    <main class="container py-4 flex-grow-1">
 
         <!-- NAVIGATION -->
         {% include 'header.html'%}
 
-        <!-- PAGE TITLE -->
-        <div class="text-center mb-4">
-            <h1 class="page-title">All Croatian providers in one place</h1>
-            <p class="lead fst-italic">
-                Explore selected prepaid mobile plans from major Croatian providers.
-                This page shows key offers for reference and helps you compare providers at a glance.
-                For full details, visit each provider's page.
-            </p>
-        </div>
 
         <!-- PROVIDER CARDS -->
-        <div class="providers-container row">
-            {% for i in range(6) %}
-            <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                <a href="{{ url_for(paths[i]) }}" class="text-decoration-none">
-                    <div class="provider-card">
-                        <img src="{{ url_for('static', filename=circle_images[i]) }}" alt="{{ paths[i] }}">
-                        <h5>{{ paths[i] }}</h5>
-                        <div class="provider-info"></div>
-                    </div>
-                </a>
+        <div class="providers-wrapper rounded-4 p-5 shadow-sm my-4">
+            <!-- PAGE TITLE -->
+            <div class="text-start mb-4">
+                <h1 class="page-title">Mobile providers</h1>
+                <p class="lead text-start">
+                    Compare mobile plans from all major Croatian providers in one place.
+                </p>
             </div>
-            {% endfor %}
-        </div>
 
+            <hr class="provider-divider">
+
+            <div class="row justify-content-center">
+                {% for i in range(5) %}
+                <div class="col-6 col-md-4 col-lg-2 mb-4">
+                    <a href="{{ url_for(paths[i]) }}" class="text-decoration-none">
+                        <div class="provider-card">
+                            <img src="{{ url_for('static', filename=circle_images[i]) }}" alt="{{ paths[i] }}">
+                            <h5>{{ tariff_names[i] }}</h5>
+                            <div class="provider-info"></div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="row justify-content-center">
+                {% for i in range(5, 7) %}
+                    <div class="col-6 col-md-4 col-lg-5 mb-4">
+                        <a href="{{ url_for(paths[i]) }}" class="text-decoration-none">
+                            <div class="provider-card">
+                                <img src="{{ url_for('static', filename=circle_images[i]) }}" alt="{{ paths[i] }}">
+                                <h5>{{ tariff_names[i] }}</h5>
+                                <div class="provider-info"></div>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </main>
 
     <!-- FOOTER -->

@@ -4,27 +4,31 @@
     <title>T-COM – Mobile Plans & Prices</title>
     {% include 'head.html' %}
 </head>
-<body>
-<main class="container">
+<body class="d-flex flex-column min-vh-100">
 
-    <!-- NAVIGATION -->
-    {% include 'header.html'%}
+    <!-- PAGE CONTENT -->
+    <main class="container py-4 flex-grow-1">
 
-    <!-- TITLE / DESCRIPTION -->
-    <section class="text-center my-4">
-        <h1 class="page-title">T-COM</h1>
-        <p class="lead">
-            T-COM, part of Hrvatski Telekom, provides fixed telephony, broadband internet, and television services.
-            Service numbers start with 098 and 099.
-        </p>
-    </section>
+        <!-- NAVIGATION -->
+        {% include 'header.html'%}
 
-    <!-- LAST UPDATE -->
-    {% include 'last_update.html' %}
+        <!-- TITLE / DESCRIPTION -->
+        <div class="providers-wrapper rounded-4 p-5 shadow-sm my-4">
+            <div class="text-start mb-4">
+                <h1 class="page-title">T-Com</h1>
+                <p class="lead text-start">
+                    T-COM, part of Hrvatski Telekom, provides fixed telephony, broadband internet, and television services. Service numbers start with 098 and 099.
+                </p>
+            </div>
+            <!-- LAST UPDATE -->
+            {% include 'last_update.html' %}
 
-    <!-- TABLE -->
-    {% include 'table.html' %}
-</main>
+            <hr class="provider-divider">
+
+            <!-- TABLE -->
+            {% include 'table.html' %}
+        </div>
+    </main>
 
     <!-- FOOTER -->
     <footer class="mt-auto">

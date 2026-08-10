@@ -18,7 +18,8 @@ from price_comparison.workflows.bon_workflow import run_bon_workflow
 from price_comparison.workflows.com_workflow import run_com_workflow
 from price_comparison.workflows.a1_workflow import run_a1_workflow
 from price_comparison.logger_config import setup_logger
-from price_comparison.db.sql_insert import save_to_db
+from price_comparison.db.sql_insert import save_to_db, refresh_db
+from price_comparison.db.db_init import create_tables
 from datetime import datetime
 import sys
 
@@ -83,13 +84,22 @@ def main() -> None:
         logger.error(
             f"Not inserting any data. Failed providers: {', '.join(failed_providers)}"
         )
+        return
     else:
-        save_to_db(all_data)
-        with open('lastupdate.txt', 'w') as f:
-            f.write(f"{date} {time}")
-        logger.info(
-            f"All providers successfully inserted into database."
-        )
+        try:
+            create_tables()
+            refresh_db()
+            save_to_db(all_data)
+            with open('lastupdate.txt', 'w') as f:
+                f.write(f"{date} {time}")
+            logger.info(
+                f"All providers successfully inserted into database."
+            )
+        except Exception:
+            logger.exception("DB insert failed")
+            sys.exit(1)
+
+
 
 if __name__ == "__main__":
     main()

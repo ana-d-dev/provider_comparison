@@ -38,7 +38,7 @@ class Telemach:
         self.raw_add_gbs: list[str] = []
 
         # List of tariffs that don't include minutes/SMS
-        self.skip_names: list[str] = ['SIM2GO kartica 1 + 29 GB', 'SIM2GO za prijenos broja']
+        self.skip_names: list[str] = ['SIM2GO kartica 1 + 9 GB', 'SIM2GO za prijenos broja']
 
         # Containers for cleaned main data
         self.main_final_minutes: list[str] = []
@@ -69,7 +69,7 @@ class Telemach:
         """
         try:
             # Launch browser in non-headless mode.
-            self.browser = self.p.chromium.launch(headless=True, args=[
+            self.browser = self.p.chromium.launch(headless=False, args=[
                 "--no-sandbox",
                 "--disable-setuid-sandbox",
                 "--disable-dev-shm-usage",
@@ -330,7 +330,6 @@ class Telemach:
             else:
                 self.clean_add_gbs.append(add_gb)
 
-
     def cleaning_add_prices(self) -> None:
         """
         Normalize additional tariff price strings.
@@ -448,6 +447,5 @@ class Telemach:
 
         # Clean, combine, and output final data
         self.handling_data()
-
 
 

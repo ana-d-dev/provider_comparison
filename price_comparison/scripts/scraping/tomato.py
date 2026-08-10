@@ -23,7 +23,7 @@ class Tomato:
         # Lists for cleaned data ready for calculations (names, prices, units)
         self.main_names: list[str] = []               # Names after stripping whitespace
         self.main_prices: list[str] = []              # Prices extracted and formatted as float strings
-        self.main_units: list[int] = []               # Units cleaned and summed
+        self.main_units: list[str] = []               # Units cleaned and summed
 
         # Combined data in structured dictionaries for each plan
         self.new_dict: list[dict] = []                # Stores dictionaries for each plan
@@ -38,7 +38,7 @@ class Tomato:
         """
         try:
             # Launch browser instance (headless=False for debugging)
-            self.browser = self.p.chromium.launch(headless=True)
+            self.browser = self.p.chromium.launch(headless=False)
 
             # Open a new browser page
             self.page = self.browser.new_page()
@@ -111,7 +111,7 @@ class Tomato:
 
         # Clean each raw price: strip spaces and replace comma with dot for float conversion
         self.main_prices = [
-            price.replace(',', '.').strip()
+            price + '.00'.strip()
             for price in self.main_raw_prices
         ]
 
@@ -128,16 +128,14 @@ class Tomato:
         """
         for unit in self.main_raw_units:
             # Replace 'jedinica' and non-breaking spaces, then strip extra spaces
-            clean_unit = unit.replace('jedinica', ' ').replace('\xa0', ' ').strip()
+            clean_unit = unit.replace('jedinica', '').strip()
 
-            # Split the string on '+' and remove remaining spaces
-            parts = [
-                part.strip().replace(' ', '')
-                for part in clean_unit.split('+')
-            ]
-
-            # Convert both parts to int and sum to get total units
-            self.main_units.append(int(parts[0]) + int(parts[1]))
+            # Split the string on ' ' and remove remaining spaces
+            if ' ' in clean_unit:
+                whole_unit = clean_unit.split(' ')[0] + clean_unit.split(' ')[1]
+                self.main_units.append(whole_unit)
+            else:
+                self.main_units.append(clean_unit)
 
 
     def all_together(self) -> None:
@@ -156,7 +154,7 @@ class Tomato:
         for name, unit, price in zip(self.main_names, self.main_units, self.main_prices):
 
             # Calculate GB equivalent
-            gb = int(unit / 1000)
+            gb = int(int(unit) / 1000)
 
             # Calculate price per GB
             one_gb_price = round(float(price) / float(gb), 2)

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Tariff Comparison API</title>
+    {% include 'head.html' %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- PAGE CONTENT -->
+    <main class="container py-4 flex-grow-1">
+
+        <!-- NAVIGATION -->
+        {% include 'header.html' %}
+
+        <!-- HERO -->
+        <div class="providers-wrapper my-4">
+
+            <h1 class="page-title">Tariff Comparison API</h1>
+
+            <p class="lead">
+                Access Croatian mobile tariff data through a JSON API.
+                Registered users receive an API key that can be used to
+                retrieve tariff information programmatically.
+            </p>
+
+            <div class="d-flex gap-2 mt-4">
+                {% if not logged_in %}
+                    <a href="{{ url_for('login') }}" class="auth-btn">Login</a>
+                    <a href="{{ url_for('register') }}" class="auth-btn primary">Register</a>
+                {% else %}
+                    <a href="{{ url_for('profile') }}" class="auth-btn">Profile</a>
+                    <form action="{{ url_for('logout_post') }}" method="POST">
+                        <button type="submit" class="auth-btn primary">
+                            Logout
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <!-- EXAMPLE RESPONSE -->
+        <div class="providers-wrapper my-4">
+            <h2>Example Response</h2>
+            <p class="lead">
+                Successful requests return JSON similar to the example below.
+            </p>
+
+<pre><code>[
+    {
+        "id": 138,
+        "provider": "A1",
+        "name": "Fleterica",
+        "price": 29.00,
+        "gb": "Unlimited",
+        "minutes": 1500
+    },
+    {
+        "id": 139,
+        "provider": "A1",
+        "name": "Ful",
+        "price": 19.90,
+        "gb": 20,
+        "minutes": 3000
+    }
+]</code></pre>
+
+        </div>
+
+        <!-- ENDPOINT -->
+        <div class="providers-wrapper my-4">
+            <h2>Endpoint</h2>
+            <p class="lead">
+                Retrieve all available tariffs.
+            </p>
+
+<pre><code>GET /api/tariffs</code></pre>
+
+        </div>
+
+        <!-- PYTHON -->
+        <div class="providers-wrapper my-4">
+            <h2>Python Example</h2>
+            <p class="lead">
+                Include your API key in the <code>X-API-Key</code> request header.
+            </p>
+
+<pre><code>import requests
+
+response = requests.get(
+    "http://127.0.0.1:5000/api/tariffs",
+    headers={
+        "X-API-Key": "YOUR_API_KEY"
+    }
+)
+
+data = response.json()
+
+for tariff in data:
+    print(tariff["name"])</code></pre>
+
+        </div>
+
+        <!-- JAVASCRIPT -->
+        <div class="providers-wrapper my-4">
+            <h2>JavaScript Example</h2>
+            <p class="lead">
+                Example request using the Fetch API.
+            </p>
+
+<pre><code>fetch("/api/tariffs", {
+    headers: {
+        "X-API-Key": "YOUR_API_KEY"
+    }
+})
+.then(response => response.json())
+.then(data => {
+    console.log(data);
+});</code></pre>
+
+        </div>
+
+        <!-- RESPONSE FIELDS -->
+        <div class="providers-wrapper my-4">
+            <h2>Response Fields</h2>
+            <table class="table comparison-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>id</td>
+                        <td>Unique tariff identifier.</td>
+                    </tr>
+                    <tr>
+                        <td>provider</td>
+                        <td>Name of the mobile provider.</td>
+                    </tr>
+
+                    <tr>
+                        <td>name</td>
+                        <td>Name of the tariff.</td>
+                    </tr>
+                    <tr>
+                        <td>price</td>
+                        <td>Monthly tariff price in EUR.</td>
+                    </tr>
+                    <tr>
+                        <td>gb</td>
+                        <td>Included mobile data.</td>
+                    </tr>
+
+                    <tr>
+                        <td>minutes</td>
+                        <td>Included call minutes.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- AUTHENTICATION -->
+        <div class="providers-wrapper my-4">
+            <h2>Authentication</h2>
+            <p class="lead">
+                This endpoint requires an API key.
+                After registering and logging in, your API key is available
+                on your profile page. Send it using the
+                <code>X-API-Key</code> request header.
+            </p>
+
+<pre><code>X-API-Key: YOUR_API_KEY</code></pre>
+
+        </div>
+
+        <!-- RATE LIMITS -->
+        <div class="providers-wrapper my-4">
+            <h2>Rate Limits</h2>
+            <p>
+                No request limits are currently enforced.
+                Rate limiting may be introduced in future versions of the API
+                to improve reliability and prevent abuse.
+            </p>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto">
+        <div class="container">
+            {% include 'footer.html' %}
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    {% include 'scripts.html' %}
+
+</body>
+</html>

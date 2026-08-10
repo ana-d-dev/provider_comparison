@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Registration</title>
+    {% include 'head.html' %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- PAGE CONTENT -->
+    <main class="container py-4 flex-grow-1">
+
+        <!-- NAVIGATION -->
+        {% include 'header.html'%}
+
+        <!-- REGISTRATION FORM -->
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <form action="{{ url_for('register_post') }}" method="POST">
+                    {{ form.hidden_tag() }}
+                    {% if message %}
+                        <p class="text-danger fw-bold"> {{ message }}</p>
+                    {% endif %}
+
+                    <h1 class="h3 mb-3 fw-normal">Registration</h1>
+
+                    {% if username_message %}
+                        {% for error in username_message %}
+                            <p class="text-danger fw-bold"> {{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="form-floating">
+                        {{ form.username(class="form-control", placeholder="Username") }}
+                        {{ form.username.label }}
+                    </div>
+
+                    {% if password_message %}
+                        {% for error in password_message %}
+                            <p class="text-danger fw-bold"> {{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="form-floating">
+                        {{ form.password(class="form-control", placeholder="Password") }}
+                        {{ form.password.label }}
+                    </div>
+
+                    <div class="my-5"></div>
+                    <button class="btn btn-primary w-100 py-2" type="submit">Register</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto">
+        <div class="container">
+            {% include 'footer.html' %}
+        </div>
+    </footer>
+
+    <!-- ALL SCRIPTS INCLUDED (BOOTSTRAP AND JAVASCRIPT) -->
+    {% include 'scripts.html' %}
+</body>
+</html>

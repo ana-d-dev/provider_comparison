@@ -8,56 +8,66 @@
 <body class="d-flex flex-column min-vh-100">
 
     <!-- PAGE CONTENT -->
-    <main class="container flex-grow-1">
+    <main class="container py-4 flex-grow-1">
 
         <!-- NAVIGATION -->
         {% include 'header.html' %}
 
         <!-- TITLE / DESCRIPTION -->
-        <section class="text-center my-4">
+        <div class="providers-wrapper rounded-4 p-5 shadow-sm my-4">
             <h1 class="page-title">About This Project</h1>
-            <p class="lead">
+            <p class="lead text-start">
                 This website compares mobile plans from Croatian providers using publicly available data.
             </p>
-        </section>
 
-        <section class="my-5">
-            <h4>Purpose</h4>
-            <p>
-                Mobile plan information in Croatia is spread across multiple provider websites.
-                This project collects and presents that data in a single, comparable format.
-            </p>
-        </section>
+            <hr class="provider-divider">
 
-        <section class="my-5">
-            <h4>What’s Implemented</h4>
-            <ul>
-                <li>Data scraping and normalization</li>
-                <li>Backend built with Flask</li>
-                <li>Sortable comparison tables</li>
-                <li>Responsive layout using Bootstrap</li>
-            </ul>
-        </section>
+            <section class="my-5">
+                <h4>Purpose</h4>
+                <p>
+                    Mobile plan information in Croatia is spread across multiple provider websites.
+                    This project collects and presents that data in a single, comparable format.
+                </p>
+            </section>
 
-        <section class="my-5">
-            <h4>Tech Stack</h4>
-            <ul>
-                <li>Python (Flask)</li>
-                <li>SQL</li>
-                <li>HTML, CSS, JavaScript</li>
-                <li>Bootstrap</li>
-            </ul>
-        </section>
+            <section class="my-5">
+                <h4>What’s Implemented</h4>
+                <ul>
+                    <li>Data scraping and normalization</li>
+                    <li>Backend built with Flask</li>
+                    <li>Mobile tariff comparison system</li>
+                    <li>Responsive user interface</li>
+                    <li>REST API with JSON responses</li>
+                    <li>User registration and authentication</li>
+                    <li>Provider-specific tariff pages</li>
+                    <li>API key management</li>
+                </ul>
+            </section>
 
-        <section class="my-5">
-            <h4>Disclaimer</h4>
-            <p>
-                All data is collected from publicly available sources and may change over time.
-            </p>
-        </section>
+            <section class="my-5">
+                <h4>Tech Stack</h4>
+                <ul>
+                    <li>Python (Flask)</li>
+                    <li>SQL</li>
+                    <li>HTML, CSS, JavaScript</li>
+                    <li>Bootstrap</li>
+                </ul>
+            </section>
 
-        <!-- FOOTER -->
-        {% include 'footer.html' %}
+            <section class="my-5">
+                <h4>Disclaimer</h4>
+                <p>
+                    All data is collected from publicly available sources and may change over time.
+                </p>
+            </section>
+        </div>
+
+         <!-- FOOTER -->
+        <footer class="mt-auto">
+            <div class="container">
+                {% include 'footer.html' %}
+            </div>
+        </footer>
     </main>
 </body>
 </html>
