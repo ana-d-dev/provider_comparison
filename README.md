@@ -13,6 +13,9 @@ This project demonstrates real-world backend engineering concepts: data pipeline
 - Structured logging via Loguru  
 - Modular scraping workflows per provider  
 - Read-only Flask dashboard for consistent plan comparison  
+- User accounts (registration, login, profile)  
+- JSON REST API (`/api/tariffs`) secured with API keys  
+- Error notifications via ntfy  
 - Data validation and error handling  
 - Test coverage using pytest  
 - Clear, modular architecture following real-world backend patterns  
@@ -31,19 +34,31 @@ This project demonstrates real-world backend engineering concepts: data pipeline
 
 ## Project Architecture
 ```bash
-price_comparison/
-├─ config/             # Provider and environment settings
-├─ db/                 # Database access, tables, insert scripts
-├─ logs/               # Logs of scraping and processing
-├─ scripts/            # Main runner and provider scrapers
-├─ tariff_selectors/   # CSS selectors for scraping each provider
-├─ templates/          # HTML templates
-├─ validation/         # Data validation rules
-├─ workflows/          # Scraper workflows
-├─ tests/              # Unit tests
-├─ .env                # Environment variables (not committed)
-├─ README.md
-└─ INSTRUCTIONS.txt
+new_price_comparison/
+├─ price_comparison/            # Application package
+│  ├─ config/                   # Provider and environment settings
+│  ├─ db/                       # Database access, tables, insert scripts
+│  ├─ logs/                     # Logs of scraping and processing
+│  ├─ scripts/                  # Main runner and provider scrapers
+│  ├─ static/                   # Static assets (CSS, images)
+│  ├─ tariff_selectors/         # CSS selectors for scraping each provider
+│  ├─ templates/                # HTML templates
+│  ├─ validation/               # Data validation rules
+│  ├─ workflows/                # Scraper workflows
+│  ├─ auth.py                   # Registration, password, and API-key helpers
+│  ├─ forms.py                  # Flask-WTF forms (registration, login)
+│  ├─ logger_config.py          # Loguru logging setup
+│  ├─ main.py                   # Flask dashboard entry point and routes
+│  ├─ notify.py                 # Error notifications via ntfy
+│  └─ utils.py                  # Shared helpers (last-update reading)
+├─ tests/                       # Unit tests
+├─ screenshots/                 # README screenshots
+├─ .env                         # Environment variables (not committed)
+├─ pyproject.toml               # Project and tooling configuration
+├─ requirements.txt             # Runtime dependencies
+├─ requirements-dev.txt         # Development dependencies
+├─ mypy.ini                     # mypy configuration
+└─ README.md
 ```
 
 ---
@@ -77,12 +92,22 @@ pip install -r requirements-dev.txt   # optional, for testing
 
 ### 4. Set up PostgreSQL
 - Create a database
-- Add credentials to the .env file
+- Create a `.env` file in the project root with the required variables:
+
+```bash
+DATABASE_URL=postgresql+psycopg2://<user>:<password>@<host>:<port>/<database>
+SECRET_KEY=<random-secret>
+NOTIFIER=<ntfy-topic-url>
+```
+
+- `DATABASE_URL` — SQLAlchemy connection string (**required**; the app raises `RuntimeError` on startup if it is missing)
+- `SECRET_KEY` — Flask session key, used by the dashboard
+- `NOTIFIER` — ntfy topic URL for error notifications (optional)
 
 
 ### 5. Run the scraper
 ```bash
-python price_comparison/scripts/main_runner.py a1 bon com telemach tomato
+python -m price_comparison.scripts.main_runner a1 bon com telemach tomato
 ```
 ### After running:
 - Data is inserted into the database
@@ -106,11 +131,11 @@ Open your browser at: http://127.0.0.1:5000/
 ---
 
 ###  Data Validation Rules
-- Required fields: provider, name, price, gb, minutes, sms, music, video, units, one_gb_price, sixty_min_price, a thousand_units
+- Required fields: provider, name, price, gb, minutes, sms, units, one_gb_price, sixty_min_price, thousand_units, scraped_date
 - Allowed providers: A1, BONBON, T-COM, TELEMACH, TOMATO
-- GB values: numeric ≤ 500 or strings like Neograničeni, Unlimited, Flat
+- GB values: numeric ≤ 2000 (terabyte values are normalized to GB, e.g. 1 TB → 1000) or strings like Neograničen, Unlimited, Flat
 - Price fields: numeric strings between 0 and 200
-- Optional fields: minutes, sms, music, video may be empty
+- Optional fields: minutes, sms may be empty
 - If validation fails, data for that provider is not inserted and an error is logged.
 
 ### Running Tests
@@ -160,13 +185,11 @@ Not intended as a commercial product.
 ### A1 Page
 ![A1 Page](screenshots/a1_header_table.png)
 
-### Compare Page
-![Compare 1](screenshots/compare_part1.png)
-![Compare 2](screenshots/compare_part2.png)
-![Compare 3](screenshots/compare_part3.png)
-![Compare 4](screenshots/compare_part4.png)
-![Compare 5](screenshots/compare_part5.png)
-![Compare 6](screenshots/compare_part6.png)
+### API example
+![Compare 1](screenshots/json_example_api.png)
+
+### Registration form
+![Compare 3](screenshots/registration_form.png)
 
 ### Mobile View
 ![Mobile View](screenshots/mobile_view.png)

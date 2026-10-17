@@ -33,12 +33,12 @@ class Tomato:
         """
         Launches the browser, opens a new page, and navigates to the Tomato main URL.
 
-        - Uses headless mode by default (`headless=True`).
+        - Runs in headless mode (`headless=True`).
         - Logs an exception if the page cannot be opened or times out.
         """
         try:
-            # Launch browser instance (headless=False for debugging)
-            self.browser = self.p.chromium.launch(headless=False)
+            # Launch browser in headless mode (no visible window).
+            self.browser = self.p.chromium.launch(headless=True)
 
             # Open a new browser page
             self.page = self.browser.new_page()
@@ -103,28 +103,26 @@ class Tomato:
 
     def cleaning_prices(self) -> None:
         """
-        Cleans scraped price strings.
-
-        - Strips extra whitespace and replaces commas with dots for numeric conversion.
-        - Prepares price data for calculations and storage.
+        Normalizes scraped price strings by appending a '.00' suffix
+        so they are float-compatible.
+        Stores results in self.main_prices.
         """
 
-        # Clean each raw price: strip spaces and replace comma with dot for float conversion
+        # Clean each raw price: append '.00' so it is a float-compatible string
         self.main_prices = [
-            price + '.00'.strip()
+            (price + '.00').strip()
             for price in self.main_raw_prices
         ]
 
 
     def cleaning_units(self) -> None:
         """
-        Cleans scraped unit strings and converts them to integers.
+        Clean scraped unit strings.
 
-        - Replaces '\xa0' and the word 'jedinica' with spaces.
-        - Splits values on '+' and strips extra whitespace.
-        - Adds both parts together to calculate total units.
-
-        Assumes each unit string contains two numeric parts.
+        - Remove the word 'jedinica' and strip whitespace.
+        - If the value contains a space, concatenate the first two
+          space-separated parts into one unit string.
+        - Store results (as strings) in self.main_units.
         """
         for unit in self.main_raw_units:
             # Replace 'jedinica' and non-breaking spaces, then strip extra spaces
@@ -143,7 +141,7 @@ class Tomato:
         Combines cleaned tariff data into a list of dictionaries.
 
         Each dictionary includes:
-        - Provider info, date, and time
+        - Provider info and scraped date
         - Plan name, price, units, and derived values:
           * GB equivalent
           * Price per GB
@@ -191,8 +189,7 @@ class Tomato:
         Calls all cleaning and combining functions to prepare the final dataset.
 
         - Cleans names, prices, and units.
-        - Merges results into structured dictionaries.
-        - Prints all intermediate and final values for debugging.
+        - Merges results into structured dictionaries stored in self.new_dict.
         """
         # Clean plan names from raw data
         self.cleaning_names()

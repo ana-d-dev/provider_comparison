@@ -11,11 +11,11 @@ class TCom:
         """
         Initializes the TCom scraper.
 
-        Sets current date and time for SQL entries.
+        Sets the scraping date for SQL entries.
         Prepares Playwright browser/page attributes for scraping.
         Prepares lists for storing scraped and cleaned data.
         - `buttons` will hold plan buttons once found.
-        - `all_data` will store combined results from all tariff types.
+        - `new_dict` will store the combined tariff dictionaries.
 
         Note: Importing `logger_config` sets up logging with loguru.
         """
@@ -49,7 +49,7 @@ class TCom:
         self.add_gbs: list[str] = []                  # GB values extracted from raw strings, cleaned of units
 
         # Combined data from all tariffs
-        self.new_dict: list[dict] = []                # Stores dictionaries for each plan from main, additional, and e-Simpa tariffs
+        self.new_dict: list[dict] = []                # Stores dictionaries for each plan from main and additional tariffs
 
 
     def calculating(self, price: str, gb: str, mins:str):
@@ -76,8 +76,8 @@ class TCom:
         Logs an exception if the page cannot be opened.
         """
         try:
-            # Launch browser instance (headless=False for debugging)
-            self.browser = self.p.chromium.launch(headless=False)
+            # Launch browser in headless mode (no visible window).
+            self.browser = self.p.chromium.launch(headless=True)
 
             # Open a new browser page
             self.page = self.browser.new_page()
@@ -219,8 +219,8 @@ class TCom:
 
     def all_together(self, names: list[str], prices: list[str], gbs: list[str], minutes: list[str]) -> None:
         """
-        Combines main and e-Simpa data into a list of dictionaries.
-        Each dictionary contains provider info, date/time, plan details, and calculated metrics.
+        Combines cleaned main plan data into a list of dictionaries.
+        Each dictionary contains provider info, scraped date, plan details, and calculated metrics.
         """
         for name, price, gb, mins in zip(names, prices, gbs, minutes):
 
@@ -244,7 +244,7 @@ class TCom:
 
     def all_together_add(self) -> None:
         """
-        Combines additional plan data with main and e-Simpa data.
+        Combines cleaned additional plan data into dictionaries.
         Handles cases where additional plans may not have minutes.
         """
         # Iterate over each additional plan
@@ -290,7 +290,6 @@ class TCom:
     def handling_data(self) -> None:
         """
         Calls all cleaning and combining functions to prepare the final dataset.
-        Prints all combined data for verification.
         """
         # Clean main plan data
         self.cleaning_main_data()

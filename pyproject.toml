@@ -2,3 +2,12 @@
 requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "price-comparison"
+version = "0.1.0"
+description = "Prepaid mobile price comparison for Croatian providers"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+include = ["price_comparison*"]
+

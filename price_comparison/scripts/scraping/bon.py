@@ -17,7 +17,7 @@ class Bon:
         """
         Initialize scraper state.
 
-        Sets timestamps, prepares browser/page placeholders,
+        Sets the scraping date, prepares browser/page placeholders,
         and initializes storage for scraped and cleaned data.
         """
         # Storing date for last scraping
@@ -53,8 +53,8 @@ class Bon:
             PlaywrightError: If the page cannot be opened.
         """
         try:
-            # Start a Chromium browser (headless=True = no visible window).
-            self.browser = self.p.chromium.launch(headless=False)
+            # Launch browser in headless mode (no visible window).
+            self.browser = self.p.chromium.launch(headless=True)
 
             # Open a new browser tab/page.
             self.page = self.browser.new_page()
@@ -307,7 +307,7 @@ class Bon:
         """
         Run the full cleaning and combining pipeline.
 
-        Prints each structured dictionary for verification.
+        Appends each structured dictionary to self.new_dict.
         """
         # Clean main plan data
         self.cleaning_main_data()

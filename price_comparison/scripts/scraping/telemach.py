@@ -12,7 +12,7 @@ class Telemach:
         Initialize the Telemach scraper.
 
         Sets up:
-        - Current date and time for logging or database insertion.
+        - Current date for logging or database insertion.
         - Placeholders for Playwright browser and page objects.
         - Containers for raw scraped data (main and additional tariffs).
         - Containers for cleaned data.
@@ -58,7 +58,7 @@ class Telemach:
 
     def fetch(self):
         """
-        Launch the Playwright Chromium browser in non-headless mode
+        Launch the Playwright Chromium browser in headless mode
         and open a new page for scraping.
 
         Raises:
@@ -68,8 +68,8 @@ class Telemach:
         - The page object is stored in self.page for later navigation and scraping.
         """
         try:
-            # Launch browser in non-headless mode.
-            self.browser = self.p.chromium.launch(headless=False, args=[
+            # Launch browser in headless mode (no visible window).
+            self.browser = self.p.chromium.launch(headless=True, args=[
                 "--no-sandbox",
                 "--disable-setuid-sandbox",
                 "--disable-dev-shm-usage",
@@ -353,9 +353,9 @@ class Telemach:
 
         Each dictionary contains:
             - provider
-            - date and time of scraping
-            - name, price, GB, minutes, SMS
-            - calculated units, price per GB, price per 1000 units, price per 60 minutes
+            - date of scraping
+            - name, price, GB (minutes and SMS are empty for additional plans)
+            - calculated units, price per GB, price per 1000 units
 
         Appends each dictionary to:
             self.new_dict (list[dict])

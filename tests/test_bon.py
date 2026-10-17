@@ -4,8 +4,8 @@ import pytest
 
 @pytest.fixture()
 def bon_instance():
-    """Create new clean instance without triggering playwright."""
-    return Bon.__new__(Bon)
+    """Create new clean instance (constructor only, no Playwright)."""
+    return Bon()
 
 
 def test_calculating_gb(bon_instance):
@@ -25,6 +25,7 @@ def test_cleaning_main_data(bon_instance):
     bon_instance.raw_names = ['Mali tjedni internet', 'Jako jako veliki internet', 'Veliki razgovori']
     bon_instance.raw_prices = ['  2,99EUR/tj.             ', '3,99EUR/tj.                   ', '                    4,99EUR/tj.']
     bon_instance.raw_values = ['  8GB                     ', '500min                        ', '                    200SMS']
+    bon_instance.scraped_date = '2025-01-01'
     bon_instance.new_dict = []
     bon_instance.cleaning_main_data()
 
@@ -36,8 +37,7 @@ def test_cleaning_main_data(bon_instance):
             'gb': '8',
             'minutes': '',
             'sms': '',
-            'music': '',
-            'video': '',
+            'scraped_date': '2025-01-01',
             'units': '8000',
             'one_gb_price': '0.37',
             'sixty_min_price': '',
@@ -50,8 +50,7 @@ def test_cleaning_main_data(bon_instance):
             'gb': '',
             'minutes': '500',
             'sms': '',
-            'music': '',
-            'video': '',
+            'scraped_date': '2025-01-01',
             'units': '500',
             'one_gb_price': '',
             'sixty_min_price': '0.07',
@@ -64,8 +63,7 @@ def test_cleaning_main_data(bon_instance):
             'gb': '',
             'minutes': '',
             'sms': '200',
-            'music': '',
-            'video': '',
+            'scraped_date': '2025-01-01',
             'units': '200',
             'one_gb_price': '',
             'sixty_min_price': '',
@@ -146,8 +144,7 @@ def test_cleaning_pre_combined_values_empty(bon_instance):
 def test_combining_pre_combined_data(bon_instance):
     """Verify combining_pre_combined_data() creates complete dictionaries from pre-cleaned data."""
     bon_instance.new_dict = []
-    bon_instance.current_date = '02.11.2025.'
-    bon_instance.current_time = '05:35:25'
+    bon_instance.scraped_date = '2025-01-01'
     bon_instance.missing_names = ['Velika kombinacija', 'Jako velika kombinacija']
     bon_instance.clean_pre_combined_prices = ['13.50', '16.50']
     bon_instance.clean_pre_combined_values = ['4000', '14', '500', '4000', '25', '500']
@@ -167,8 +164,7 @@ def test_combining_pre_combined_data(bon_instance):
             'gb': '14',
             'minutes': '4000',
             'sms': '500',
-            'music': '',
-            'video': '',
+            'scraped_date': '2025-01-01',
             'units': '18500',
             'one_gb_price': '0.96',
             'sixty_min_price': '0.23',
@@ -181,8 +177,7 @@ def test_combining_pre_combined_data(bon_instance):
             'gb': '25',
             'minutes': '4000',
             'sms': '500',
-            'music': '',
-            'video': '',
+            'scraped_date': '2025-01-01',
             'units': '18500',
             'one_gb_price': '0.96',
             'sixty_min_price': '0.28',

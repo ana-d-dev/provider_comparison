@@ -131,7 +131,7 @@ def validate_gb(row):
     """
     Validate the 'gb' field.
 
-    Accepts numeric string <= 500 or values in ALLOWED_GB.
+    Accepts numeric string <= 2000 or values in ALLOWED_GB.
     Empty string is allowed. Raises ValidationError if invalid.
     """
     gb_raw = row['gb']
@@ -142,7 +142,8 @@ def validate_gb(row):
         raise ValidationError(f"Invalid GB. Row: {row['gb']}")
 
     if gb_raw.isdigit():         # Numeric GB
-        if int(gb_raw) > 500:
+        # 1 TB plans are normalized to 1000 GB, so keep headroom above the old 500 cap.
+        if int(gb_raw) > 2000:
             raise ValidationError(f"GB are too high. Row: {row['gb']}")
     elif gb_raw not in ALLOWED_GB:        # Allowed string GB values
         raise ValidationError(f"Invalid GB value. Row: {row['gb']}")

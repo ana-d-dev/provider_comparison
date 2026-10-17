@@ -1,7 +1,5 @@
-from os import error
-
 from price_comparison.db.db_access import get_all_data, get_provider_data, get_user_by_id, get_user_by_api_key
-from flask import Flask, render_template, jsonify, redirect, url_for, session, request
+from flask import Flask, render_template, jsonify, redirect, url_for, session, request, flash
 from price_comparison.forms import RegistrationForm, LoginForm
 from price_comparison.auth import register_user, auth_user
 from price_comparison.logger_config import setup_logger
@@ -23,9 +21,9 @@ date = time.strftime('%d.%m.%Y.', current_time)
 load_dotenv()
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
-# app.config['SESSION_COOKIE_HTTPONLY'] = True
-# app.config['SESSION_COOKIE_SECURE'] = True
-# app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 limiter = Limiter(get_remote_address, app=app)
 
 
@@ -117,7 +115,8 @@ def register_post():
 
         success, message = register_user(username, password)
         if success:
-            return render_template("login.html", form=LoginForm(), message=message)
+            # login.html renders the green confirmation from success_message
+            return render_template("login.html", form=LoginForm(), success_message=message)
 
         return render_template("register.html", form=register_form, message=message)
 
@@ -151,6 +150,7 @@ def login_post():
 
     session["user_id"] = user["id"]
 
+    flash("Logged in successfully.")
     return redirect(url_for("profile"))
 
 
@@ -193,7 +193,7 @@ def api_tariffs():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
 
 
 

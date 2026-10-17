@@ -9,7 +9,7 @@ This script:
   5. Error-level logs trigger notifications automatically.
 
 Usage:
-    python main_runner.py a1 bon com telemach tomato
+    python -m price_comparison.scripts.main_runner a1 bon com telemach tomato
 """
 
 from price_comparison.workflows.telemach_workflow import run_telemach_workflow

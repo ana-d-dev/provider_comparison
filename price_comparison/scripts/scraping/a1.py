@@ -45,8 +45,8 @@ class A1:
         Launch browser and open the target A1 prepaid tariffs page.
         """
         try:
-            # Launch browser in non-headless mode (set to True for production automation).
-            self.browser = self.p.chromium.launch(headless=False)
+            # Launch browser in headless mode (no visible window).
+            self.browser = self.p.chromium.launch(headless=True)
 
             # Opening a new browser tab
             self.page = self.browser.new_page()
@@ -75,7 +75,7 @@ class A1:
     def scraping_data(self) -> None:
         """
         Scrape raw data for main and additional A1 tariffs.
-        - Iterates through category buttons to extract main offers (name, price, values).
+        - Extracts main offers (name, price, values) via CSS locators.
         - Extracts additional offers (name, price, GB/minutes).
         """
         try:
@@ -158,23 +158,34 @@ class A1:
         Stores results in self.clean_main_prices.
         """
         self.clean_main_prices = [
-            price.replace(',', '.').replace('€', '').strip()
+            price.replace('mjesečno', '')
+            .replace('/mj.', '')
+            .replace('€', '')
+            .replace(',', '.')
+            .split('\n')[0]
+            .strip()
+            .split(' ')[0]
             for price in self.raw_main_prices
+            if price.strip()
         ]
 
 
     def cleaning_main_values(self) -> None:
         """
         Normalize raw main values:
-        - Remove marketing text (e.g., "Saznaj više").
-        - Strip whitespace.
+        - Split multi-line values and strip the 'min/sms' and 'GB' labels.
+        - Convert terabyte values to gigabytes as numeric strings (1 TB = 1000 GB).
+        - Remove marketing text (e.g., "Saznaj više") and strip whitespace.
         Stores results in self.clean_main_values.
         """
+        # Normalize terabyte values to gigabytes so they stay numeric (1 TB = 1000 GB).
         self.clean_main_values = [
-            val.strip()
+            str(int(float(val.replace(' ', '').upper()[:-2]) * 1000))
+            if val.replace(' ', '').upper().endswith('TB')
+            else val.strip()
             for value in self.raw_main_values
             for val in value.replace('min/sms', '').replace('GB', '').split('\n')
-            if val.strip()
+            if val.strip() and 'Saznaj više' not in val
 
         ]
 
@@ -295,12 +306,14 @@ class A1:
                     sixty_min_price, units = self.calculating(0, price, gb)
                     entry['sms'] = str(gb)
                     entry['units'] = str(units)
+                    entry['sixty_min_price'] = str(sixty_min_price)
                 else:
                     units, one_gb_price, thousand_units, sixty_min_price = self.calculating(gb, price, 0)
                     entry['gb'] = str(gb)
                     entry['units'] = str(units)
                     entry['one_gb_price'] = str(one_gb_price)
                     entry['thousand_units'] = str(thousand_units)
+                    entry['sixty_min_price'] = str(sixty_min_price)
             else:
                 entry['gb'] = str(gb)
 

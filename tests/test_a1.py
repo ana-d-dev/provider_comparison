@@ -4,37 +4,37 @@ from price_comparison.scripts.scraping.a1 import A1
 
 @pytest.fixture
 def a1_instance():
-    """Creates a fresh A1 instance for each test (without running Playwright)."""
-    return A1.__new__(A1)
+    """Creates a fresh A1 instance for each test (constructor only, no Playwright)."""
+    return A1()
 
 
 def test_calculating_with_gb(a1_instance):
     """Checking the result is correct when there is gb and price."""
-    result = a1_instance.calculating(gb=5, price='2.99')
+    result = a1_instance.calculating(gb=5, price='2.99', sms=0)
     assert result == (5000, 0.6, 0.6, 0.05)
 
 
 def test_calculating_without_gb(a1_instance):
     """Checking the result is correct when there is no gb, but price."""
-    result = a1_instance.calculating(gb=0, price='3.99')
-    assert result == 0.07
+    result = a1_instance.calculating(gb=0, price='3.99', sms=0)
+    assert result == (0.07, 0)
 
 
 def test_calculating_with_negative_gb(a1_instance):
     """Verify calculating() returns False when GB is negative (invalid input)."""
-    result = a1_instance.calculating(gb=-5, price='2.99')
+    result = a1_instance.calculating(gb=-5, price='2.99', sms=0)
     assert result == False, f"Expected False for negative GB, got {result}"
 
 
 def test_calculating_with_string_price(a1_instance):
     """Checking if price passed as string."""
-    result = a1_instance.calculating(gb=8, price='abc')
+    result = a1_instance.calculating(gb=8, price='abc', sms=0)
     assert result == False
 
 
 def test_calculating_with_string_gb(a1_instance):
     """Checking if gb passed as string."""
-    result = a1_instance.calculating(gb='abc', price='8.99')
+    result = a1_instance.calculating(gb='abc', price='8.99', sms=0)
     assert result == False
 
 
@@ -208,6 +208,7 @@ def test_all_together_main(a1_instance):
 
     # Define list which will hold dictionaries
     a1_instance.new_dict = []
+    a1_instance.scraped_date = '2025-01-01'
 
     # Define mocking names
     a1_instance.clean_main_names = ['Super', 'Fer']
@@ -218,7 +219,7 @@ def test_all_together_main(a1_instance):
     # Define mocking values
     a1_instance.clean_main_values = ['5', '5000', '4', '4000']
 
-    def mock_calculating(gb, price):
+    def mock_calculating(gb, price, sms):
         """Returns units, one_gb_price, thousand_units, sixty_min_price."""
         return 1000, 2.0, 2000.0, 3.0
 
@@ -237,8 +238,7 @@ def test_all_together_main(a1_instance):
         'gb': '5',
         'minutes': '5000',
         'sms': '',
-        'music': '',
-        'video': '',
+        'scraped_date': '2025-01-01',
         'units': '1000',
         'one_gb_price': '2.0',
         'sixty_min_price': '3.0',
@@ -251,8 +251,7 @@ def test_all_together_main(a1_instance):
         'gb': '4',
         'minutes': '4000',
         'sms': '',
-        'music': '',
-        'video': '',
+        'scraped_date': '2025-01-01',
         'units': '1000',
         'one_gb_price': '2.0',
         'sixty_min_price': '3.0',
@@ -282,6 +281,7 @@ def test_all_together_add(a1_instance):
 
     # Define list which will hold dictionaries
     a1_instance.new_dict = []
+    a1_instance.scraped_date = '2025-01-01'
 
     # Define mocking add names
     a1_instance.clean_add_names = ['Uzmi 9', 'Tjedni flat']
@@ -293,7 +293,7 @@ def test_all_together_add(a1_instance):
     a1_instance.clean_add_gbs = ['9', '10']
 
 
-    def mock_calculating(gb, price):
+    def mock_calculating(gb, price, sms):
         """Returns units, one_gb_price, thousand_units, sixty_min_price."""
         return 2000, 0.2, 2000.0, 0.34
 
@@ -312,8 +312,7 @@ def test_all_together_add(a1_instance):
         'gb': '9',
         'minutes': '',
         'sms': '',
-        'music': '',
-        'video': '',
+        'scraped_date': '2025-01-01',
         'units': '2000',
         'one_gb_price': '0.2',
         'sixty_min_price': '0.34',
@@ -326,8 +325,7 @@ def test_all_together_add(a1_instance):
         'gb': '10',
         'minutes': '',
         'sms': '',
-        'music': '',
-        'video': '',
+        'scraped_date': '2025-01-01',
         'units': '2000',
         'one_gb_price': '0.2',
         'sixty_min_price': '0.34',
